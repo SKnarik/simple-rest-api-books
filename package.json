@@ -1,0 +1,13 @@
+{
+  "name": "simple-rest-api-books",
+  "version": "1.0.0",
+  "description": "Simple REST API using Node.js and Express.js",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Knarik",
+  "license": "ISC"
+}
