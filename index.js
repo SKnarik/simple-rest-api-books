@@ -7,16 +7,6 @@ const PORT = 3000;
 
 app.use(express.json());
 
-app.get("/books", (req, res) => {
-  try {
-    const books = JSON.parse(fs.readFileSync("books.json", "utf8"));
-    res.send(books);
-  } catch (error) {
-    console.error("Error reading books data:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
-
 app.post("/books", (req, res) => {
   const { title, author, genre, year_published, rating, summary } = req.body;
   const id = uuidv4();
@@ -46,6 +36,32 @@ app.post("/books", (req, res) => {
   books.push(newBook);
   fs.writeFileSync("books.json", JSON.stringify(books, null, 2));
   res.send(books);
+});
+
+app.get("/books", (req, res) => {
+  try {
+    const books = JSON.parse(fs.readFileSync("books.json", "utf8"));
+    res.send(books);
+  } catch (error) {
+    console.error("Error reading books data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/books/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const books = JSON.parse(fs.readFileSync("books.json", "utf8"));
+    const thisBook = books.find((book) => book.id === id);
+
+    if (!thisBook) {
+      throw new Error("Book not found");
+    }
+
+    res.send(thisBook);
+  } catch (error) {
+    res.status(404).send({ error: error.message });
+  }
 });
 
 app.listen(PORT, () => {
