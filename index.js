@@ -64,6 +64,65 @@ app.get("/books/:id", (req, res) => {
   }
 });
 
+app.put("/books", (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      throw new Error("ID parameter is required");
+    }
+
+    const payload = req.body;
+    const books = JSON.parse(fs.readFileSync("books.json", "utf8"));
+    const index = books.findIndex((book) => book.id === id);
+
+    if (index === -1) {
+      throw new Error("Book not found");
+    }
+
+    const thisBook = books[index];
+
+    Object.assign(thisBook, payload);
+
+    const updatedBook = books[index];
+
+    fs.writeFileSync("books.json", JSON.stringify(books, null, 2));
+
+    res.status(200).send({
+      message: `The book with id "${id}" successfully updateed`,
+      book: updatedBook,
+    });
+  } catch (error) {
+    res.status(404).send({ error: error.message });
+  }
+});
+
+app.delete("/books/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const books = JSON.parse(fs.readFileSync("books.json", "utf8"));
+
+    const index = books.findIndex((book) => book.id === id);
+
+    if (index === -1) {
+      throw new Error("Book not found");
+    }
+
+    const [deletedBook] = books.splice(index, 1);
+    console.log(deletedBook);
+
+    fs.writeFileSync("books.json", JSON.stringify(books, null, 2));
+
+    res.status(200).send({
+      message: `The book with id "${id}" successfully deleted`,
+      book: deletedBook,
+    });
+  } catch (error) {
+    res.status(404).send({ error: error.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at port ${PORT}`);
 });
