@@ -1,12 +1,19 @@
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
+import { bookValidationSchema } from "../validations/book-validation.js";
 
 export const createBook = (req, res) => {
   try {
     const { title, author, genre, year_published, rating, summary } = req.body;
     const id = uuidv4();
     const createdAt = moment();
+
+    const { error } = bookValidationSchema.validate(req.body);
+
+    if (error) {
+      res.status(403).send(error.message);
+    }
 
     const newBook = {
       id,
