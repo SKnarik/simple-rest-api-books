@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
     "prettier": "prettier --write \"**/*.js\""
   },
   "author": "Knarik",
@@ -16,6 +16,7 @@
     "prettier": "^3.2.5"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "uuid": "^9.0.1"
   }
